@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>나만의 중고마켓</title>
+    <link rel="stylesheet" href="https://s3.ap-northeast-2.amazonaws.com/materials.spartacodingclub.kr/easygpt/default.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <style>
+        /* 꾸미기 */
+        *{margin: 0; padding: 0;}
+        body{
+            background: #ededed;
+        }
+        .hero {
+            background-color: #343a40;
+            color: #ffffff;
+            padding: 50px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .slider {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slider img {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .slider img.active {
+            opacity: 1;
+        }
+        .weather-menu {
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            background: #000;
+            color: #fff;
+        }
+
+        .weather-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .weather-info span{
+            margin-right: 15px;
+        }
+        .weather-info p{
+            margin-right: 5px;
+        }
+
+        .weather-location {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .weather-temperature, .weather-description {
+            margin: 0.5rem 0;
+        }
+
+        .weather-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin: 0;
+        }
+
+        .card {
+            height: 480px; /* 원하는 높이로 설정해주세요 */
+        }
+        .card-body p{
+            height: 35px;
+        }
+        #back-to-top-btn {
+            display: none; /* 페이지 최상단에서 숨기기 */
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            font-size: 24px;
+            border: none;
+            outline: none;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            height: 100px;
+        }
+
+        #back-to-top-btn {
+            display: none; /* 페이지 최상단에서 숨기기 */
+            position: fixed;
+            width: 50px;
+            height: 50px;
+            line-height: 30px;
+            bottom: 40px;
+            right: 30px;
+            font-size: 24px;
+            border: none;
+            outline: none;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        #back-to-top-btn:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" style="width: 1200px;">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#">chatGPT 중고마켓</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">팝니다</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">삽니다</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">인기제품</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">무료나눔</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="weather-menu">
+            <div class="weather-info">
+              <span>오늘의 중고거래 날씨는 어떨까요?</span>  
+              <p class="weather-location"></p>
+              <p class="weather-temperature"></p>
+              <p class="weather-description"></p>
+            </div>
+            <img class="weather-icon" src="" alt="">
+            <form action="https://www.google.com/search" method="GET">
+                <input type="text" name="q" placeholder="물품 검색">
+                <button type="submit py-1">검색</button>
+              </form>
+        </div>
+        <div>
+            <div class="slider">
+                <img src="https://picsum.photos/1200/200?random=1" alt="" class="active">
+                <img src="https://picsum.photos/1200/200?random=2" alt="">
+                <img src="https://picsum.photos/1200/200?random=3" alt="">
+                <img src="https://picsum.photos/1200/200?random=4" alt="">
+            </div>
+        </div>
+        <div>
+            <div class="hero">
+                <h1>chatGPT 중고마켓</h1>
+                <p>chatGPT의 중고 물건을 팝니다!</p>
+            </div>
+        </div>
+        <div class="mt-3">
+            <div class="row">
+              <div class="col-md-4 mb-4">
+                <div class="card">
+                  <img src="https://picsum.photos/400/300" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">노트북</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">80만원</h6>
+                    <p class="card-text">한 번 밖에 안쓴 노트북 팝니다. 부모님이 독립 할 때 주신 거에요!</p>
+                    <a href="http://chat.openai.com" class="card-link" target="_blank">상세보기</a>
+                    <div class="d-flex align-items-center mt-3 justify-content-end">
+                        <img src="https://picsum.photos/30/30" alt="profile" class="rounded-circle me-2">
+                        <span class="fw-bold">@seller123</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-4">
+                <div class="card">
+                  <img src="https://picsum.photos/400/300" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">스마트폰</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">30만원</h6>
+                    <p class="card-text">새 것 구매해서 팝니다. 1년 정도 사용했어요.</p>
+                    <a href="http://chat.openai.com" class="card-link" target="_blank">상세보기</a>
+                    <div class="d-flex align-items-center mt-3 justify-content-end">
+                        <img src="https://picsum.photos/30/30" alt="profile" class="rounded-circle me-2">
+                        <span class="fw-bold">@seller123</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-4">
+                <div class="card">
+                  <img src="https://picsum.photos/400/300" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">전자레인지</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">20만원</h6>
+                    <p class="card-text">1년 정도 사용했어요. 큰 걸 사서 팔아요.</p>
+                    <a href="http://chat.openai.com" class="card-link" target="_blank">상세보기</a>
+                    <div class="d-flex align-items-center mt-3 justify-content-end">
+                        <img src="https://picsum.photos/30/30" alt="profile" class="rounded-circle me-2">
+                        <span class="fw-bold">@seller123</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-4">
+                <div class="card">
+                  <img src="https://picsum.photos/400/300" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">노트북</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">80만원</h6>
+                    <p class="card-text">한 번 밖에 안쓴 노트북 팝니다. 부모님이 독립 할 때 주신 거에요!</p>
+                    <a href="http://chat.openai.com" class="card-link" target="_blank">상세보기</a>
+                    <div class="d-flex align-items-center mt-3 justify-content-end">
+                        <img src="https://picsum.photos/30/30" alt="profile" class="rounded-circle me-2">
+                        <span class="fw-bold">@seller123</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-4">
+                <div class="card">
+                  <img src="https://picsum.photos/400/300" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">스마트폰</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">30만원</h6>
+                    <p class="card-text">새 것 구매해서 팝니다. 1년 정도 사용했어요.</p>
+                    <a href="http://chat.openai.com" class="card-link" target="_blank">상세보기</a>
+                    <div class="d-flex align-items-center mt-3 justify-content-end">
+                        <img src="https://picsum.photos/30/30" alt="profile" class="rounded-circle me-2">
+                        <span class="fw-bold">@seller123</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-4">
+                <div class="card">
+                  <img src="https://picsum.photos/400/300" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">전자레인지</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">20만원</h6>
+                    <p class="card-text">1년 정도 사용했어요. 큰 걸 사서 팔아요.</p>
+                    <a href="http://chat.openai.com" class="card-link" target="_blank">상세보기</a>
+                    <div class="d-flex align-items-center mt-3 justify-content-end">
+                        <img src="https://picsum.photos/30/30" alt="profile" class="rounded-circle me-2">
+                        <span class="fw-bold">@seller123</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-4">
+                <div class="card">
+                  <img src="https://picsum.photos/400/300" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">노트북</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">80만원</h6>
+                    <p class="card-text">한 번 밖에 안쓴 노트북 팝니다. 부모님이 독립 할 때 주신 거에요!</p>
+                    <a href="http://chat.openai.com" class="card-link" target="_blank">상세보기</a>
+                    <div class="d-flex align-items-center mt-3 justify-content-end">
+                        <img src="https://picsum.photos/30/30" alt="profile" class="rounded-circle me-2">
+                        <span class="fw-bold">@seller123</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-4">
+                <div class="card">
+                  <img src="https://picsum.photos/400/300" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">스마트폰</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">30만원</h6>
+                    <p class="card-text">새 것 구매해서 팝니다. 1년 정도 사용했어요.</p>
+                    <a href="http://chat.openai.com" class="card-link" target="_blank">상세보기</a>
+                    <div class="d-flex align-items-center mt-3 justify-content-end">
+                        <img src="https://picsum.photos/30/30" alt="profile" class="rounded-circle me-2">
+                        <span class="fw-bold">@seller123</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-4">
+                <div class="card">
+                  <img src="https://picsum.photos/400/300" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">전자레인지</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">20만원</h6>
+                    <p class="card-text">1년 정도 사용했어요. 큰 걸 사서 팔아요.</p>
+                    <a href="http://chat.openai.com" class="card-link" target="_blank">상세보기</a>
+                    <div class="d-flex align-items-center mt-3 justify-content-end">
+                        <img src="https://picsum.photos/30/30" alt="profile" class="rounded-circle me-2">
+                        <span class="fw-bold">@seller123</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <footer class="bg-dark text-white">
+            <!-- footer 내용 -->
+            <div class="container pt-4">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h5>Footer 내용 1</h5>
+                    <p>해당 부분에 원하는 내용을 입력해주세요.</p>
+                  </div>
+                  <div class="col-md-6">
+                    <h5>Footer 내용 2</h5>
+                    <p>해당 부분에 원하는 내용을 입력해주세요.</p>
+                  </div>
+                </div>
+              </div>
+            <button id="back-to-top-btn" title="Go to top">↑</button>
+        </footer>
+    </div>
+    <script>
+    const slider = document.querySelector('.slider');
+        const images = slider.querySelectorAll('img');
+        let counter = 0;
+
+        setInterval(() => {
+            images[counter].classList.remove('active');
+            counter++;
+            if (counter === images.length) {
+                counter = 0;
+            }
+            images[counter].classList.add('active');
+        }, 5000);
+        const backToTopButton = document.getElementById("back-to-top-btn");
+
+        // 스크롤이 20px 이상 내려가면 버튼을 보이게 함
+        window.onscroll = function() {
+        scrollFunction();
+        };
+
+        function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            backToTopButton.style.display = "block";
+        } else {
+            backToTopButton.style.display = "none";
+        }
+        }
+
+        // 버튼을 누르면 최상단으로 이동함
+        backToTopButton.addEventListener("click", backToTop);
+
+        function backToTop() {
+        document.body.scrollTop = 0; // Safari
+        document.documentElement.scrollTop = 0; // Chrome, Firefox, IE and Opera
+        }
+
+        const weatherapiKey = 'a27ee811235befb550b2e05254a85809';
+        const city = 'Seoul';
+        const weatherMenu = document.querySelector('.weather-menu');
+        const weatherLocation = weatherMenu.querySelector('.weather-location');
+        const weatherTemperature = weatherMenu.querySelector('.weather-temperature');
+        const weatherDescription = weatherMenu.querySelector('.weather-description');
+        const weatherIcon = weatherMenu.querySelector('.weather-icon');
+
+        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherapiKey}&units=metric`)
+        .then(response => response.json())
+        .then(data => {
+            weatherLocation.innerText = `${data.name} 의 날씨`;
+            weatherTemperature.innerText = `${data.main.temp}도`;
+            weatherDescription.innerText = data.weather[0].description;
+            weatherIcon.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
+        })
+        .catch(error => {
+            console.error('Error fetching weather data:', error);
+        });
+        
+    </script>
+</body>
+
+</html>
